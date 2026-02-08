@@ -1,10 +1,16 @@
 import { Outlet, ScrollRestoration } from "react-router";
+import Header from "./Header";
+import Footer from "./Footer";
+import Sidebar from "./Sidebar";
 
 function Layout() {
   return (
-    <div className="bg-[#0e0f1c] text-white min-h-screen">
+    <div className="min-h-screen">
       <ScrollRestoration />
+      <Header />
       <Outlet />
+      <Sidebar />
+      <Footer />
     </div>
   );
 }
