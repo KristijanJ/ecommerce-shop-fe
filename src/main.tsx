@@ -9,6 +9,7 @@ import SidebarProvider from "./contexts/SidebarContext.tsx";
 import CartProvider from "./contexts/CartContext.tsx";
 import ProductProvider from "./contexts/ProductContext.tsx";
 import ProductDetails from "./pages/ProductDetails.tsx";
+import TestItem from "./pages/TestItem.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/product/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "/test-item",
+        element: <TestItem />,
       },
     ],
   },
