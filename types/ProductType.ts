@@ -3,10 +3,13 @@ export interface ProductType {
   title: string;
   price: number;
   description: string;
-  category: string;
+  category: ProductCategoryType;
   image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
+  ratingRate: number;
+  ratingCount: number;
+}
+
+export interface ProductCategoryType {
+  id: number;
+  name: string;
 }

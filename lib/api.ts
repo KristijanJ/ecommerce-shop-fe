@@ -14,7 +14,7 @@ export async function getProducts(): Promise<ProductType[]> {
     }
 
     const data = await response.json();
-    return data;
+    return data.data;
   } catch (error) {
     console.error("Error fetching products:", error);
     return [];
@@ -23,7 +23,7 @@ export async function getProducts(): Promise<ProductType[]> {
 
 export async function getProduct(id: string): Promise<ProductType | null> {
   try {
-    const response = await fetch(`${API_URL}/products/${id}`, {
+    const response = await fetch(`${API_URL}:${API_PORT}/products/${id}`, {
       next: { revalidate: 30 }, // Cache for 30 seconds
     });
 
@@ -32,7 +32,7 @@ export async function getProduct(id: string): Promise<ProductType | null> {
     }
 
     const data = await response.json();
-    return data;
+    return data.data;
   } catch (error) {
     console.error("Error fetching product:", error);
     return null;

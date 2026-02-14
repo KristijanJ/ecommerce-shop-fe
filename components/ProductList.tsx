@@ -4,13 +4,10 @@ import Product from "@/components/Product";
 import type { ProductType } from "@/types/ProductType";
 
 const ProductList = ({ products }: { products: ProductType[] }) => {
-  const filteredProducts = products.filter((item) => {
-    return (
-      item.category === "men's clothing" ||
-      item.category === "women's clothing" ||
-      item.category === "jewelery"
-    );
-  });
+  // const filteredProducts = products.filter((item) => {
+  //   return item;
+  //   // return item.category == "1" || item.category == "2" || item.category == "3";
+  // });
 
   return (
     <section className="py-20">
@@ -19,7 +16,7 @@ const ProductList = ({ products }: { products: ProductType[] }) => {
           Explore Our Products
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 lg:mx-8 gap-7.5 max-w-sm mx-auto md:max-w-none md:mx-0">
-          {filteredProducts.map((product) => {
+          {products.map((product) => {
             return <Product product={product} key={product.id} />;
           })}
         </div>
