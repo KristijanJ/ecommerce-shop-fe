@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SidebarContext } from "@/contexts/SidebarContext";
 import { CartContext } from "@/contexts/CartContext";
 import { logoutAction } from "@/app/actions/auth";
@@ -9,22 +9,25 @@ import Link from "next/link";
 import { BsBag, BsPerson, BsBoxArrowRight } from "react-icons/bs";
 
 const Header = ({ user }: { user: UserType | null }) => {
-  const [isActive, setIsActive] = useState(false);
   const { isOpen, setIsOpen } = useContext(SidebarContext);
   const { itemAmount } = useContext(CartContext);
 
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      window.scrollY > 60 ? setIsActive(true) : setIsActive(false);
-    });
-  });
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
-    <header
-      className={`${
-        isActive ? "bg-white py-4 shadow-md" : "bg-none py-6"
-      } fixed w-full z-10 lg:px-8 transition-all`}
-    >
+    <header className="bg-white py-4 shadow-md fixed w-full z-10 lg:px-8">
       <div className="container mx-auto flex items-center justify-between h-full">
         <Link href={"/"}>
           <div className="w-10">
@@ -35,49 +38,64 @@ const Header = ({ user }: { user: UserType | null }) => {
         <div className="flex items-center gap-6">
           {user ? (
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <BsPerson className="text-lg" />
-                <span className="text-sm font-medium hidden sm:inline">
-                  {user.firstName} {user.lastName}
-                </span>
-              </div>
-              <form action={logoutAction}>
+              <div ref={ref} className="relative">
                 <button
-                  type="submit"
-                  className="flex items-center gap-2 text-sm hover:text-red-500 transition-colors"
-                  title="Logout"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center gap-2 cursor-pointer"
                 >
-                  <BsBoxArrowRight className="text-lg" />
-                  <span className="hidden sm:inline">Logout</span>
+                  <BsPerson className="text-2xl" />
                 </button>
-              </form>
+
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg border border-gray-100">
+                    <form action={logoutAction} className="gap-2 flex flex-col">
+                      <div className="text-sm font-medium border-b border-gray-200 p-2 flex items-center gap-2">
+                        <BsPerson className="text-lg" />
+                        <span>
+                          {user.firstName} {user.lastName}
+                        </span>
+                      </div>
+                      <button
+                        type="submit"
+                        className="flex items-center gap-2 text-sm hover:text-red-500 transition-colors cursor-pointer p-2"
+                        title="Logout"
+                      >
+                        <BsBoxArrowRight className="text-lg" />
+                        <span>Logout</span>
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             <div className="flex items-center gap-4">
               <Link
                 href="/login"
-                className="text-sm font-medium hover:text-blue-600 transition-colors"
+                className="text-sm font-medium hover:text-gray-500 transition-colors"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className="text-sm font-medium bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                className="text-sm font-medium bg-primary text-white px-4 py-2 rounded"
               >
                 Sign Up
               </Link>
             </div>
           )}
 
-          <div
-            onClick={() => setIsOpen(!isOpen)}
-            className="cursor-pointer flex relative"
-          >
-            <BsBag className="text-2xl" />
-            <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-4.5 h-4.5 text-white rounded-full flex justify-center items-center">
-              {itemAmount}
+          {user && (
+            <div
+              onClick={() => setIsOpen(!isOpen)}
+              className="cursor-pointer flex relative"
+            >
+              <BsBag className="text-2xl" />
+              <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-4.5 h-4.5 text-white rounded-full flex justify-center items-center">
+                {itemAmount}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </header>
