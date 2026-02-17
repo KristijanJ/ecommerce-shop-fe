@@ -1,5 +1,5 @@
 import ProductDetailView from "@/components/ProductDetailView";
-import { getProduct } from "@/lib/api";
+import { getProduct } from "@/app/lib/products";
 import { notFound } from "next/navigation";
 
 export default async function ProductDetails({

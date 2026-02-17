@@ -5,7 +5,7 @@ import { Providers } from "@/components/Providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Sidebar from "@/components/Sidebar";
-import { getSession } from "@/lib/session";
+import { getSession } from "@/app/lib/session";
 
 const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
