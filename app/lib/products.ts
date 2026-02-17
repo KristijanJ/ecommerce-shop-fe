@@ -6,7 +6,7 @@ const API_PORT = process.env.API_PORT || "3000";
 export async function getProducts(): Promise<ProductType[]> {
   try {
     const response = await fetch(`${API_URL}:${API_PORT}/products`, {
-      next: { revalidate: 60 }, // Cache for 60 seconds
+      next: { tags: ["products"] },
     });
 
     if (!response.ok) {
@@ -24,7 +24,7 @@ export async function getProducts(): Promise<ProductType[]> {
 export async function getProduct(id: string): Promise<ProductType | null> {
   try {
     const response = await fetch(`${API_URL}:${API_PORT}/products/${id}`, {
-      next: { revalidate: 30 }, // Cache for 30 seconds
+      next: { tags: ["products"] },
     });
 
     if (!response.ok) {

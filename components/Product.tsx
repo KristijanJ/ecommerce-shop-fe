@@ -1,12 +1,18 @@
 "use client";
 
 import { useContext } from "react";
-import { BsPlus, BsEyeFill } from "react-icons/bs";
+import { BsPlus, BsEyeFill, BsPencil } from "react-icons/bs";
 import { CartContext } from "@/contexts/CartContext";
 import type { ProductType } from "@/types/ProductType";
 import Link from "next/link";
 
-const Product = ({ product }: { product: ProductType }) => {
+const Product = ({
+  product,
+  edit = false,
+}: {
+  product: ProductType;
+  edit?: boolean;
+}) => {
   const { addToCart } = useContext(CartContext);
 
   const { id, image, category, title, price } = product;
@@ -24,14 +30,23 @@ const Product = ({ product }: { product: ProductType }) => {
         </div>
 
         <div className="absolute top-6 -right-11 group-hover:right-5 p-2 flex flex-col justify-center items-center gap-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <button
-            onClick={() => addToCart(product, id)}
-            className="cursor-pointer"
-          >
-            <div className="flex justify-center items-center text-white w-12 h-12 bg-teal-500">
-              <BsPlus className="text-3xl" />
-            </div>
-          </button>
+          {!edit ? (
+            <button
+              onClick={() => addToCart(product, id)}
+              className="cursor-pointer"
+            >
+              <div className="flex justify-center items-center text-white w-12 h-12 bg-teal-500">
+                <BsPlus className="text-3xl" />
+              </div>
+            </button>
+          ) : (
+            <Link
+              href={`/seller/my-products/edit/${id}`}
+              className="w-12 h-12 bg-teal-500 flex justify-center items-center text-white drop-shadow-xl"
+            >
+              <BsPencil />
+            </Link>
+          )}
           <Link
             href={`/product/${id}`}
             className="w-12 h-12 bg-white flex justify-center items-center text-primary drop-shadow-xl"
@@ -42,7 +57,9 @@ const Product = ({ product }: { product: ProductType }) => {
       </div>
 
       <div>
-        <div className="tex-sm capitalize text-gray-500 mb-1">{category.name}</div>
+        <div className="tex-sm capitalize text-gray-500 mb-1">
+          {category.name}
+        </div>
         <Link href={`/product/${id}`}>
           <h2 className="font-semibold mb-1">{title}</h2>
         </Link>

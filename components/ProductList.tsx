@@ -6,9 +6,11 @@ import type { ProductType } from "@/types/ProductType";
 const ProductList = ({
   products,
   title = "Explore Our Products",
+  edit = false,
 }: {
   products: ProductType[];
   title?: string;
+  edit?: boolean;
 }) => {
   return (
     <section className="py-20">
@@ -16,7 +18,7 @@ const ProductList = ({
         <h1 className="text-3xl font-semibold mb-10 text-center">{title}</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 lg:mx-8 gap-7.5 max-w-sm mx-auto md:max-w-none md:mx-0">
           {products.map((product) => {
-            return <Product product={product} key={product.id} />;
+            return <Product product={product} key={product.id} edit={edit} />;
           })}
         </div>
       </div>
