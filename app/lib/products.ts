@@ -1,3 +1,6 @@
+import "server-only";
+
+import { cookies } from "next/headers";
 import type { ProductType } from "@/types/ProductType";
 
 const API_URL = process.env.API_URL || "http://localhost";
@@ -17,6 +20,28 @@ export async function getProducts(): Promise<ProductType[]> {
     return data.data;
   } catch (error) {
     console.error("Error fetching products:", error);
+    return [];
+  }
+}
+
+export async function getMyProducts(): Promise<ProductType[]> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth_token")?.value;
+
+    if (!token) return [];
+
+    const response = await fetch(`${API_URL}:${API_PORT}/products/mine`, {
+      headers: { Authorization: `Bearer ${token}` },
+      next: { tags: ["products"] },
+    });
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching my products:", error);
     return [];
   }
 }

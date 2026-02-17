@@ -1,9 +1,9 @@
-import { getProducts } from "@/app/lib/products";
+import { getMyProducts } from "@/app/lib/products";
 import ProductList from "@/components/ProductList";
 import Link from "next/link";
 
 export default async function MyProducts() {
-  const products = await getProducts();
+  const products = await getMyProducts();
 
   return (
     <section className="h-screen flex justify-center items-center">

@@ -1,3 +1,10 @@
+export interface ProductOwnerType {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
 export interface ProductType {
   id: number;
   title: string;
@@ -7,6 +14,7 @@ export interface ProductType {
   image: string;
   ratingRate: number;
   ratingCount: number;
+  owner: ProductOwnerType;
 }
 
 export interface ProductCategoryType {
