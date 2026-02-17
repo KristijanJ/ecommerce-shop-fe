@@ -48,13 +48,25 @@ const Header = ({ user }: { user: UserType | null }) => {
 
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg border border-gray-100">
-                    <form action={logoutAction} className="gap-2 flex flex-col">
-                      <div className="text-sm font-medium border-b border-gray-200 p-2 flex items-center gap-2">
-                        <BsPerson className="text-lg" />
-                        <span>
-                          {user.firstName} {user.lastName}
-                        </span>
+                    <div className="text-sm font-medium border-b border-gray-200 p-2 flex items-center gap-2">
+                      <BsPerson className="text-lg" />
+                      <span>
+                        {user.firstName} {user.lastName}
+                      </span>
+                    </div>
+                    {(user.roles.includes("seller") ||
+                      user.roles.includes("admin")) && (
+                      <div className="text-sm font-medium p-2 flex items-center gap-2">
+                        <BsBag className="text-lg" />
+                        <Link
+                          href="/seller/my-products"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          My products
+                        </Link>
                       </div>
+                    )}
+                    <form action={logoutAction} className="gap-2 flex flex-col">
                       <button
                         type="submit"
                         className="flex items-center gap-2 text-sm hover:text-red-500 transition-colors cursor-pointer p-2"
