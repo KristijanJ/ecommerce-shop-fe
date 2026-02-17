@@ -1,7 +1,7 @@
 import type { ProductType } from "@/types/ProductType";
 
-const API_URL = process.env.API_URL || "localhost";
-const API_PORT = process.env.API_PORT || "8080";
+const API_URL = process.env.API_URL || "http://localhost";
+const API_PORT = process.env.API_PORT || "3000";
 
 export async function getProducts(): Promise<ProductType[]> {
   try {

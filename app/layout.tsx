@@ -5,6 +5,7 @@ import { Providers } from "@/components/Providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Sidebar from "@/components/Sidebar";
+import { getSession } from "@/lib/session";
 
 const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
@@ -17,16 +18,18 @@ export const metadata: Metadata = {
   description: "Fresh Fashion Finds - Your favorite online store",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getSession();
+
   return (
     <html lang="en">
       <body className={`${poppins.variable} min-h-screen`}>
         <Providers>
-          <Header />
+          <Header user={user} />
           {children}
           <Sidebar />
           <Footer />
