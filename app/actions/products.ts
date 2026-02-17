@@ -23,6 +23,7 @@ export async function productFormAction(
   const productCategoryId = formData.get("productCategoryId") as string;
   const ratingRate = formData.get("ratingRate") as string;
   const ratingCount = formData.get("ratingCount") as string;
+  const stock = formData.get("stock") as string;
 
   const fields = {
     title,
@@ -32,15 +33,21 @@ export async function productFormAction(
     productCategoryId,
     ratingRate,
     ratingCount,
+    stock,
   };
 
-  if (!title || !price || !description || !image || !productCategoryId) {
+  if (!title || !price || !description || !image || !productCategoryId || !stock) {
     return { error: "Please fill in all required fields", fields };
   }
 
   const priceNum = parseFloat(price);
   if (isNaN(priceNum) || priceNum <= 0) {
     return { error: "Price must be a positive number", fields };
+  }
+
+  const stockNum = parseInt(stock);
+  if (isNaN(stockNum) || stockNum <= 0) {
+    return { error: "Stock must be a positive number", fields };
   }
 
   try {
@@ -59,6 +66,7 @@ export async function productFormAction(
   const body: Record<string, unknown> = {
     title,
     price: priceNum,
+    stock: stockNum,
     description,
     image,
     productCategoryId: parseInt(productCategoryId),
@@ -71,6 +79,8 @@ export async function productFormAction(
     const url = isEdit
       ? `${API_URL}:${API_PORT}/products/${productId}`
       : `${API_URL}:${API_PORT}/products`;
+
+    console.log(body);
 
     const response = await fetch(url, {
       method: isEdit ? "PUT" : "POST",

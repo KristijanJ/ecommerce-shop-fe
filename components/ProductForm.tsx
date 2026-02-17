@@ -50,28 +50,52 @@ function ProductForm({ categories, product }: ProductFormProps) {
         />
       </div>
 
-      <div>
-        <label
-          htmlFor="price"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Price <span className="text-red-500">*</span>
-        </label>
-        <div className="relative mt-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-            $
-          </span>
-          <input
-            id="price"
-            name="price"
-            type="number"
-            step="0.01"
-            min="0.01"
-            required
-            defaultValue={val("price", product?.price)}
-            className="block w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-            placeholder="0.00"
-          />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label
+            htmlFor="price"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Price <span className="text-red-500">*</span>
+          </label>
+          <div className="relative mt-1">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+              $
+            </span>
+            <input
+              id="price"
+              name="price"
+              type="number"
+              step="0.01"
+              min="0.01"
+              required
+              defaultValue={val("price", product?.price)}
+              className="block w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label
+            htmlFor="stock"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Stock <span className="text-red-500">*</span>
+          </label>
+          <div className="relative mt-1">
+            <input
+              id="stock"
+              name="stock"
+              type="number"
+              step="0.01"
+              min="0.01"
+              required
+              defaultValue={val("stock", product?.stock)}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+              placeholder="0"
+            />
+          </div>
         </div>
       </div>
 

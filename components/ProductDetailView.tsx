@@ -6,7 +6,7 @@ import type { ProductType } from "@/types/ProductType";
 
 const ProductDetailView = ({ product }: { product: ProductType }) => {
   const { addToCart } = useContext(CartContext);
-  const { title, price, description, image } = product;
+  const { title, price, description, image, stock } = product;
 
   return (
     <section className="pt-112.5 md:pt-32 pb-100 md:pb-12 lg:py-32 h-screen flex items-center">
@@ -20,15 +20,13 @@ const ProductDetailView = ({ product }: { product: ProductType }) => {
             <h1 className="text-[26px] font-medium mb-2 max-w-112.5 mx-auto lg:mx-0">
               {title}
             </h1>
-            <div className="text-2xl text-red-500 font-medium mb-6">
-              $ {price}
-            </div>
-            <p className="mb-8">{description}</p>
+            <p className="mb-2">{description}</p>
+            <p className="mb-8">In Stock: {stock}</p>
             <button
               onClick={() => addToCart(product, product.id)}
               className="bg-primary py-4 px-8 text-white"
             >
-              Add to cart
+              Add to cart - ${price}
             </button>
           </div>
         </div>

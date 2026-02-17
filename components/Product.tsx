@@ -15,7 +15,7 @@ const Product = ({
 }) => {
   const { addToCart } = useContext(CartContext);
 
-  const { id, image, category, title, price } = product;
+  const { id, image, category, title, price, stock } = product;
   return (
     <div>
       <div className="border border-[#e4e4e4] h-75 mb-4 relative overflow-hidden group transition">
@@ -64,7 +64,8 @@ const Product = ({
           <h2 className="font-semibold mb-1">{title}</h2>
         </Link>
 
-        <h2 className="font-semibbold">$ {price}</h2>
+        <div className="font-semibold">$ {price}</div>
+        <div>In Stock: {stock}</div>
       </div>
     </div>
   );

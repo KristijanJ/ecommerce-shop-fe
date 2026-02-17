@@ -14,6 +14,7 @@ export interface ProductType {
   image: string;
   ratingRate: number;
   ratingCount: number;
+  stock: number;
   owner: ProductOwnerType;
 }
 
