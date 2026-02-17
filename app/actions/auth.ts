@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
 
-type AuthState = { error: string } | undefined;
+type AuthState = { error: string; fields?: Record<string, string> } | undefined;
 
 const cookieOptions = {
   httpOnly: true,
@@ -24,7 +24,7 @@ export async function loginAction(
   const password = formData.get("password") as string;
 
   if (!email || !password) {
-    return { error: "Please fill in all fields" };
+    return { error: "Please fill in all fields", fields: { email } };
   }
 
   try {
@@ -38,15 +38,15 @@ export async function loginAction(
 
     if (!response.ok) {
       if (response.status === 401 || response.status === 404) {
-        return { error: "Invalid email or password" };
+        return { error: "Invalid email or password", fields: { email } };
       }
-      return { error: data.error ?? "Login failed. Please try again." };
+      return { error: data.error ?? "Login failed. Please try again.", fields: { email } };
     }
 
     const cookieStore = await cookies();
     cookieStore.set("auth_token", data.token, cookieOptions);
   } catch {
-    return { error: "Network error. Please check your connection." };
+    return { error: "Network error. Please check your connection.", fields: { email } };
   }
 
   redirect("/");
@@ -62,16 +62,18 @@ export async function registerAction(
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
 
+  const fields = { email, confirmEmail, firstName, lastName };
+
   if (!email || !confirmEmail || !password || !firstName || !lastName) {
-    return { error: "Please fill in all fields" };
+    return { error: "Please fill in all fields", fields };
   }
 
   if (email !== confirmEmail) {
-    return { error: "Emails must match" };
+    return { error: "Emails must match", fields };
   }
 
   if (password.length < 8) {
-    return { error: "Password must be at least 8 characters" };
+    return { error: "Password must be at least 8 characters", fields };
   }
 
   try {
@@ -90,13 +92,13 @@ export async function registerAction(
     const data = await response.json();
 
     if (!response.ok) {
-      return { error: data.error ?? "Registration failed. Please try again." };
+      return { error: data.error ?? "Registration failed. Please try again.", fields };
     }
 
     const cookieStore = await cookies();
     cookieStore.set("auth_token", data.token, cookieOptions);
   } catch {
-    return { error: "Network error. Please check your connection." };
+    return { error: "Network error. Please check your connection.", fields };
   }
 
   redirect("/");
