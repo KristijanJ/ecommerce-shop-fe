@@ -27,7 +27,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${poppins.variable} min-h-screen`}>
+      <body className={`${poppins.variable} min-h-screen flex flex-col justify-between`}>
         <Providers>
           <Header user={user} />
           {children}

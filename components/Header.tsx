@@ -7,10 +7,14 @@ import { logoutAction } from "@/app/actions/auth";
 import { UserType } from "@/types/UserType";
 import Link from "next/link";
 import { BsBag, BsPerson, BsBoxArrowRight } from "react-icons/bs";
+import { usePathname } from "next/navigation";
 
 const Header = ({ user }: { user: UserType | null }) => {
   const { isOpen, setIsOpen } = useContext(SidebarContext);
   const { itemAmount } = useContext(CartContext);
+
+  const pathName = usePathname();
+  const cartIconHiddenPaths = ["/checkout"];
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -97,7 +101,7 @@ const Header = ({ user }: { user: UserType | null }) => {
             </div>
           )}
 
-          {user && (
+          {user && !cartIconHiddenPaths.includes(pathName) && (
             <div
               onClick={() => setIsOpen(!isOpen)}
               className="cursor-pointer flex relative"

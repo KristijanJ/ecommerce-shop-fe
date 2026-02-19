@@ -1,16 +1,22 @@
 "use client";
 
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 import { IoMdArrowForward } from "react-icons/io";
 import { FiTrash2 } from "react-icons/fi";
 import CartItem from "@/components/CartItem";
 import { SidebarContext } from "@/contexts/SidebarContext";
 import { CartContext } from "@/contexts/CartContext";
-import Link from "next/link";
 
 const Sidebar = () => {
+  const router = useRouter();
   const { isOpen, handleClose } = useContext(SidebarContext);
   const { cart, clearCart, itemAmount, total } = useContext(CartContext);
+
+  const redirectToCheckout = () => {
+    handleClose();
+    router.push("/checkout");
+  };
 
   return (
     <div
@@ -47,18 +53,13 @@ const Sidebar = () => {
             <FiTrash2 />
           </div>
         </div>
-        <Link
-          href={"/"}
-          className="bg-gray-200 flex p-3 justify-center items-center text-primary w-full font-medium"
-        >
-          View Cart
-        </Link>
-        <Link
-          href={"/"}
+
+        <button
+          onClick={redirectToCheckout}
           className="bg-primary flex p-3 justify-center items-center text-white w-full font-medium"
         >
           Checkout
-        </Link>
+        </button>
       </div>
     </div>
   );

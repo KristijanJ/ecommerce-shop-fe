@@ -1,20 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "./app/lib/session";
 
 const protectedRoutes = ["/seller"];
 const publicOnlyRoutes = ["/login", "/register"];
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
-  const token = req.cookies.get("auth_token")?.value;
+  const user = await getSession();
 
   const isProtected = protectedRoutes.some((r) => path.startsWith(r));
   const isPublicOnly = publicOnlyRoutes.includes(path);
 
-  if (isProtected && !token) {
+  if (isProtected && !user) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  if (isPublicOnly && token) {
+  if (isPublicOnly && user) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
