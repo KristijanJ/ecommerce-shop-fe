@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "./app/lib/session";
 
-const protectedRoutes = ["/seller"];
+const protectedRoutes = ["/seller", "/checkout", "/order-confirmation", "/payment"];
 const publicOnlyRoutes = ["/login", "/register"];
 
 export async function proxy(req: NextRequest) {
