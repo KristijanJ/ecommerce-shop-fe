@@ -6,7 +6,7 @@ import { CartContext } from "@/contexts/CartContext";
 import { logoutAction } from "@/app/actions/auth";
 import { UserType } from "@/types/UserType";
 import Link from "next/link";
-import { BsBag, BsPerson, BsBoxArrowRight } from "react-icons/bs";
+import { BsBag, BsPerson, BsBoxArrowRight, BsReceipt } from "react-icons/bs";
 import { usePathname } from "next/navigation";
 
 const Header = ({ user }: { user: UserType | null }) => {
@@ -57,6 +57,15 @@ const Header = ({ user }: { user: UserType | null }) => {
                       <span>
                         {user.firstName} {user.lastName}
                       </span>
+                    </div>
+                    <div className="text-sm font-medium p-2 flex items-center gap-2">
+                      <BsReceipt className="text-lg" />
+                      <Link
+                        href="/account/purchases"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        My purchases
+                      </Link>
                     </div>
                     {(user.roles.includes("seller") ||
                       user.roles.includes("admin")) && (
