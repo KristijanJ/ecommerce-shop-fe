@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSession } from "@/app/lib/session";
-import { redirect } from "next/navigation";
+import { getPurchase } from "@/app/lib/purchases";
+import { redirect, notFound } from "next/navigation";
 
 interface OrderConfirmationPageProps {
   params: Promise<{ purchaseId: string }>;
@@ -12,6 +13,18 @@ async function OrderConfirmationPage({ params }: OrderConfirmationPageProps) {
 
   if (!user) {
     redirect("/login");
+  }
+
+  const purchaseIdNum = parseInt(purchaseId, 10);
+
+  if (isNaN(purchaseIdNum)) {
+    notFound();
+  }
+
+  const purchase = await getPurchase(purchaseIdNum);
+
+  if (!purchase) {
+    notFound();
   }
 
   return (

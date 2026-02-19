@@ -1,6 +1,7 @@
 import { getSession } from "@/app/lib/session";
+import { getPurchase } from "@/app/lib/purchases";
 import PaymentForm from "@/components/PaymentForm";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 
 interface PaymentPageProps {
   params: Promise<{ purchaseId: string }>;
@@ -17,7 +18,17 @@ async function PaymentPage({ params }: PaymentPageProps) {
   const purchaseIdNum = parseInt(purchaseId, 10);
 
   if (isNaN(purchaseIdNum)) {
-    redirect("/");
+    notFound();
+  }
+
+  const purchase = await getPurchase(purchaseIdNum);
+
+  if (!purchase) {
+    notFound();
+  }
+
+  if (purchase.status !== "PENDING") {
+    redirect(`/order-confirmation/${purchaseIdNum}`);
   }
 
   const cardholderName = `${user.firstName} ${user.lastName}`;
