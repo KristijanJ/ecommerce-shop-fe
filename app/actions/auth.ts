@@ -61,11 +61,16 @@ export async function registerAction(
   const password = formData.get("password") as string;
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
+  const role = formData.get("role") as string;
 
-  const fields = { email, confirmEmail, firstName, lastName };
+  const fields = { email, confirmEmail, firstName, lastName, role };
 
   if (!email || !confirmEmail || !password || !firstName || !lastName) {
     return { error: "Please fill in all fields", fields };
+  }
+
+  if (!role || !["buyer", "seller"].includes(role)) {
+    return { error: "Please select a role", fields };
   }
 
   if (email !== confirmEmail) {
@@ -86,6 +91,7 @@ export async function registerAction(
         password,
         firstName,
         lastName,
+        role,
       }),
     });
 

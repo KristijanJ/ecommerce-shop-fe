@@ -1,11 +1,14 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { registerAction } from "@/app/actions/auth";
 import Link from "next/link";
 
 export default function RegisterPage() {
   const [state, action, pending] = useActionState(registerAction, undefined);
+  const [role, setRole] = useState<"buyer" | "seller">(
+    (state?.fields?.role as "buyer" | "seller") ?? "buyer",
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -31,6 +34,46 @@ export default function RegisterPage() {
               {state.error}
             </div>
           )}
+
+          {/* Role selector */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              I want to...
+            </label>
+            <input type="hidden" name="role" value={role} />
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setRole("buyer")}
+                className={`border-2 rounded-lg p-4 text-left transition-colors cursor-pointer ${
+                  role === "buyer"
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                <div className="text-xl mb-1">🛍️</div>
+                <div className="font-semibold text-sm">Shop</div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  Browse and buy products
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole("seller")}
+                className={`border-2 rounded-lg p-4 text-left transition-colors cursor-pointer ${
+                  role === "seller"
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                <div className="text-xl mb-1">🏪</div>
+                <div className="font-semibold text-sm">Sell</div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  List and sell products
+                </div>
+              </button>
+            </div>
+          </div>
 
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
