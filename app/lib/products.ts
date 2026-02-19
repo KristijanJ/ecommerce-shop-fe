@@ -6,11 +6,20 @@ import type { ProductType } from "@/types/ProductType";
 const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
 
-export async function getProducts(): Promise<ProductType[]> {
+export async function getProducts(filters?: {
+  categoryId?: string;
+  search?: string;
+}): Promise<ProductType[]> {
   try {
-    const response = await fetch(`${API_URL}:${API_PORT}/products`, {
-      next: { tags: ["products"] },
-    });
+    const params = new URLSearchParams();
+    if (filters?.categoryId) params.set("category", filters.categoryId);
+    if (filters?.search) params.set("search", filters.search);
+
+    const query = params.toString();
+    const response = await fetch(
+      `${API_URL}:${API_PORT}/products${query ? `?${query}` : ""}`,
+      { next: { tags: ["products"] } },
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch products");
