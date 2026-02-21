@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { BsPlus, BsEyeFill, BsPencil, BsTrash3 } from "react-icons/bs";
+import { BsPlus, BsPencil, BsTrash3 } from "react-icons/bs";
 import { CartContext } from "@/contexts/CartContext";
 import type { ProductType } from "@/types/ProductType";
 import Link from "next/link";
@@ -30,69 +30,50 @@ const Product = ({
 
   const { id, image, category, title, price, stock } = product;
   return (
-    <div>
-      <div className="border border-[#e4e4e4] h-75 mb-4 relative overflow-hidden group transition">
-        <div className="w-full h-full flex justify-center items-center">
-          <div className="w-50 mx-auto flex justify-center items-center">
-            <img
-              className="max-h-40 group-hover:scale-110 transition duration-300"
-              src={image}
-              alt=""
-            />
-          </div>
-        </div>
-
-        <div className="absolute top-6 -right-11 group-hover:right-5 p-2 flex flex-col justify-center items-center gap-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          {!edit ? (
-            <button
-              onClick={() => addToCart(product, id)}
-              className="cursor-pointer"
-            >
-              <div className="flex justify-center items-center text-white w-12 h-12 bg-teal-500">
-                <BsPlus className="text-3xl" />
-              </div>
-            </button>
-          ) : (
-            <>
-              <Link
-                href={`/seller/my-products/edit/${id}`}
-                className="w-12 h-12 bg-teal-500 flex justify-center items-center text-white drop-shadow-xl"
-              >
-                <BsPencil />
-              </Link>
-              <button
-                onClick={() => setIsProductDeleteModalOpen(true)}
-                className="cursor-pointer"
-              >
-                <div className="flex justify-center items-center text-white w-12 h-12 bg-red-500">
-                  <BsTrash3 className="text-3xl" />
-                </div>
-              </button>
-            </>
-          )}
-          <Link
-            href={`/product/${id}`}
-            className="w-12 h-12 bg-white flex justify-center items-center text-primary drop-shadow-xl"
-          >
-            <BsEyeFill />
-          </Link>
-        </div>
+    <div className="border border-[#e4e4e4] flex flex-col">
+      <div className="h-48 flex justify-center items-center p-4">
+        <img className="max-h-40 object-contain" src={image} alt="" />
       </div>
 
-      <div>
-        <div className="tex-sm capitalize text-gray-500 mb-1">
+      <div className="p-4 flex flex-col flex-1">
+        <div className="text-sm capitalize text-gray-500 mb-1">
           {category.name}
         </div>
         <Link href={`/product/${id}`}>
           <h2 className="font-semibold mb-1">{title}</h2>
         </Link>
-
-        <div className="font-semibold">$ {price}</div>
+        <div className="font-semibold mb-1">$ {price}</div>
         {stock === 0 ? (
-          <div className="text-red-500">Out of stock</div>
+          <div className="text-red-500 text-sm mb-3">Out of stock</div>
         ) : (
-          <div>In Stock: {stock}</div>
+          <div className="text-sm mb-3">In Stock: {stock}</div>
         )}
+
+        <div className="flex items-center gap-2 mt-auto">
+          {!edit ? (
+            <button
+              onClick={() => addToCart(product, id)}
+              className="flex-1 bg-teal-500 text-white py-2 px-4 text-sm font-medium cursor-pointer"
+            >
+              Add to Cart
+            </button>
+          ) : (
+            <>
+              <Link
+                href={`/seller/my-products/edit/${id}`}
+                className="flex-1 bg-teal-500 text-white py-2 px-4 text-sm font-medium text-center"
+              >
+                Edit
+              </Link>
+              <button
+                onClick={() => setIsProductDeleteModalOpen(true)}
+                className="py-2 px-2 flex justify-center items-center text-red-500 border border-red-200 cursor-pointer"
+              >
+                <BsTrash3 />
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <Modal
