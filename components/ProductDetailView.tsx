@@ -1,15 +1,18 @@
 "use client";
 
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 import { CartContext } from "@/contexts/CartContext";
 import type { ProductType } from "@/types/ProductType";
 
 const ProductDetailView = ({ product }: { product: ProductType }) => {
   const { addToCart } = useContext(CartContext);
+  const router = useRouter();
   const { title, price, description, image, stock } = product;
 
   return (
     <section className="pt-112.5 md:pt-32 pb-100 md:pb-12 lg:py-32 h-screen flex items-center">
+      <button onClick={() => router.back()} className="absolute top-24 left-8 text-sm text-gray-500 hover:text-black transition">← Back</button>
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row items-center">
           <div className="flex flex-1 justify-center items-center mb-8 lg:mb-0">

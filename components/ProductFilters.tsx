@@ -30,7 +30,7 @@ export default function ProductFilters({ categories }: ProductFiltersProps) {
       });
 
       startTransition(() => {
-        router.push(`/?${params.toString()}`, { scroll: false });
+        router.push(`/products/?${params.toString()}`, { scroll: true });
       });
     },
     [router, searchParams],
