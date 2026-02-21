@@ -11,10 +11,9 @@ import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   user: UserType | null;
-  shopName: string;
 }
 
-const Header = ({ user, shopName }: HeaderProps) => {
+const Header = ({ user }: HeaderProps) => {
   const { isOpen, setIsOpen } = useContext(SidebarContext);
   const { itemAmount } = useContext(CartContext);
 
@@ -41,7 +40,6 @@ const Header = ({ user, shopName }: HeaderProps) => {
         <Link href={"/"}>
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt="" width={40} height={40} />
-            <div>{shopName}</div>
           </div>
         </Link>
 

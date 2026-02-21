@@ -18,8 +18,6 @@ export const metadata: Metadata = {
   description: "Fresh Fashion Finds - Your favorite online store",
 };
 
-const shopName = process.env.SHOP_NAME || "My Shop";
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +29,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} min-h-screen flex flex-col justify-between`}>
         <Providers>
-          <Header user={user} shopName={shopName} />
+          <Header user={user} />
           {children}
           <Sidebar />
           <Footer />

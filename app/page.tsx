@@ -4,6 +4,9 @@ import ProductFilters from "@/components/ProductFilters";
 import { getProducts } from "@/app/lib/products";
 import { getCategories } from "@/app/lib/categories";
 
+const shopName = process.env.SHOP_NAME || "My Shop";
+const shopDescription = process.env.SHOP_DESCRIPTION || "Welcome to our shop!";
+
 interface HomeProps {
   searchParams: Promise<{ category?: string; search?: string }>;
 }
@@ -18,7 +21,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <div>
-      <Hero />
+      <Hero shopName={shopName} shopDescription={shopDescription} />
       <ProductFilters categories={categories} />
       <ProductList products={products} />
     </div>
