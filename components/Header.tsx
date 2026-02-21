@@ -9,7 +9,12 @@ import Link from "next/link";
 import { BsBag, BsPerson, BsBoxArrowRight, BsReceipt } from "react-icons/bs";
 import { usePathname } from "next/navigation";
 
-const Header = ({ user }: { user: UserType | null }) => {
+interface HeaderProps {
+  user: UserType | null;
+  shopName: string;
+}
+
+const Header = ({ user, shopName }: HeaderProps) => {
   const { isOpen, setIsOpen } = useContext(SidebarContext);
   const { itemAmount } = useContext(CartContext);
 
@@ -34,8 +39,9 @@ const Header = ({ user }: { user: UserType | null }) => {
     <header className="bg-white py-4 shadow-md fixed w-full z-10 lg:px-8">
       <div className="container mx-auto flex items-center justify-between h-full">
         <Link href={"/"}>
-          <div className="w-10">
-            <img src="/logo.svg" alt="" />
+          <div className="flex items-center gap-2">
+            <img src="/logo.svg" alt="" width={40} height={40} />
+            <div>{shopName}</div>
           </div>
         </Link>
 
