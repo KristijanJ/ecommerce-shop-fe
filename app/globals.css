@@ -10,6 +10,7 @@
   /* Custom Colors */
   --color-primary: #222222;
   --color-secondary: #f5e6e0;
+  --color-error: #ff0000;
 }
 
 /* Container padding customization */

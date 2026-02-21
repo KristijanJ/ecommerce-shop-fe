@@ -1,10 +1,12 @@
 "use client";
 
-import { useContext } from "react";
-import { BsPlus, BsEyeFill, BsPencil } from "react-icons/bs";
+import { useContext, useState } from "react";
+import { BsPlus, BsEyeFill, BsPencil, BsTrash3 } from "react-icons/bs";
 import { CartContext } from "@/contexts/CartContext";
 import type { ProductType } from "@/types/ProductType";
 import Link from "next/link";
+import Modal from "./Modal";
+import { deleteProduct } from "@/app/actions/products";
 
 const Product = ({
   product,
@@ -14,6 +16,17 @@ const Product = ({
   edit?: boolean;
 }) => {
   const { addToCart } = useContext(CartContext);
+  const [isProductDeleteModalOpen, setIsProductDeleteModalOpen] =
+    useState(false);
+
+  const handleDeleteProduct = async (id: number) => {
+    try {
+      await deleteProduct(id.toString());
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+    setIsProductDeleteModalOpen(false);
+  };
 
   const { id, image, category, title, price, stock } = product;
   return (
@@ -40,12 +53,22 @@ const Product = ({
               </div>
             </button>
           ) : (
-            <Link
-              href={`/seller/my-products/edit/${id}`}
-              className="w-12 h-12 bg-teal-500 flex justify-center items-center text-white drop-shadow-xl"
-            >
-              <BsPencil />
-            </Link>
+            <>
+              <Link
+                href={`/seller/my-products/edit/${id}`}
+                className="w-12 h-12 bg-teal-500 flex justify-center items-center text-white drop-shadow-xl"
+              >
+                <BsPencil />
+              </Link>
+              <button
+                onClick={() => setIsProductDeleteModalOpen(true)}
+                className="cursor-pointer"
+              >
+                <div className="flex justify-center items-center text-white w-12 h-12 bg-red-500">
+                  <BsTrash3 className="text-3xl" />
+                </div>
+              </button>
+            </>
           )}
           <Link
             href={`/product/${id}`}
@@ -65,8 +88,25 @@ const Product = ({
         </Link>
 
         <div className="font-semibold">$ {price}</div>
-        <div>In Stock: {stock}</div>
+        {stock === 0 ? (
+          <div className="text-red-500">Out of stock</div>
+        ) : (
+          <div>In Stock: {stock}</div>
+        )}
       </div>
+
+      <Modal
+        title="Delete Product"
+        content={
+          <div className="flex flex-col gap-2 mb-6">
+            <p>Are you sure you want to delete the product?</p>
+            <p className="font-semibold">{product.title}</p>
+          </div>
+        }
+        open={isProductDeleteModalOpen}
+        onClose={() => setIsProductDeleteModalOpen(false)}
+        onConfirm={() => handleDeleteProduct(id)}
+      />
     </div>
   );
 };

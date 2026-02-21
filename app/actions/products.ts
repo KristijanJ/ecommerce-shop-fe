@@ -11,9 +11,14 @@ export type ProductFormState =
   | { error: string; fields?: Record<string, string> }
   | undefined;
 
+async function getToken() {
+  const cookieStore = await cookies();
+  return cookieStore.get("auth_token")?.value;
+}
+
 export async function productFormAction(
   _prevState: ProductFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ProductFormState> {
   const productId = formData.get("productId") as string | null;
   const title = formData.get("title") as string;
@@ -36,7 +41,14 @@ export async function productFormAction(
     stock,
   };
 
-  if (!title || !price || !description || !image || !productCategoryId || !stock) {
+  if (
+    !title ||
+    !price ||
+    !description ||
+    !image ||
+    !productCategoryId ||
+    !stock
+  ) {
     return { error: "Please fill in all required fields", fields };
   }
 
@@ -56,8 +68,7 @@ export async function productFormAction(
     return { error: "Image must be a valid URL", fields };
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth_token")?.value;
+  const token = await getToken();
 
   if (!token) {
     return { error: "You must be logged in to manage products", fields };
@@ -105,4 +116,29 @@ export async function productFormAction(
 
   revalidateTag("products", "max");
   redirect("/seller/my-products");
+}
+
+export async function deleteProduct(id: string) {
+  try {
+    const token = await getToken();
+
+    if (!token) {
+      throw new Error("You must be logged in to manage products");
+    }
+
+    const response = await fetch(`${API_URL}:${API_PORT}/products/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+      next: { tags: ["products"] },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to delete product");
+    }
+
+    revalidateTag("products", "max");
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return null;
+  }
 }
