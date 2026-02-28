@@ -3,10 +3,16 @@
 import CartProvider from "@/contexts/CartContext";
 import SidebarProvider from "@/contexts/SidebarContext";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  userId,
+}: {
+  children: React.ReactNode;
+  userId: number | null;
+}) {
   return (
     <SidebarProvider>
-      <CartProvider>{children}</CartProvider>
+      <CartProvider userId={userId}>{children}</CartProvider>
     </SidebarProvider>
   );
 }

@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { updateCart } from "./cart";
 
 const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
@@ -42,6 +43,7 @@ export async function checkoutFormAction(
   }
 
   const { data: purchase } = await response.json();
+  await updateCart([]);
   redirect(`/checkout/payment/${purchase.id}`);
 }
 
