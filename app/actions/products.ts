@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidateTag } from "next/cache";
+import logger from "../lib/logger";
 
 const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
@@ -91,7 +92,7 @@ export async function productFormAction(
       ? `${API_URL}:${API_PORT}/products/${productId}`
       : `${API_URL}:${API_PORT}/products`;
 
-    console.log(body);
+    logger.info({ isEdit, productId, body }, `${isEdit ? "Updating" : "Creating"} product`);
 
     const response = await fetch(url, {
       method: isEdit ? "PUT" : "POST",
@@ -105,12 +106,16 @@ export async function productFormAction(
     const data = await response.json();
 
     if (!response.ok) {
+      logger.warn({ productId, status: response.status }, "Product save failed");
       return {
         error: data.error ?? "Failed to save product. Please try again.",
         fields,
       };
     }
-  } catch {
+
+    logger.info({ productId, isEdit: !!productId }, "Product saved");
+  } catch (err) {
+    logger.error({ err }, "Product save network error");
     return { error: "Network error. Please check your connection.", fields };
   }
 
@@ -136,9 +141,10 @@ export async function deleteProduct(id: string) {
       throw new Error("Failed to delete product");
     }
 
+    logger.info({ id }, "Product deleted");
     revalidateTag("products", "max");
-  } catch (error) {
-    console.error("Error deleting product:", error);
+  } catch (err) {
+    logger.error({ err, id }, "Product delete failed");
     return null;
   }
 }

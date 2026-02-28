@@ -2,6 +2,7 @@ import "server-only";
 
 import { cookies } from "next/headers";
 import type { ProductType } from "@/types/ProductType";
+import logger from "./logger";
 
 const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
@@ -28,7 +29,7 @@ export async function getProducts(filters?: {
     const data = await response.json();
     return data.data;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    logger.error({ err: error }, "Error fetching products");
     return [];
   }
 }
@@ -50,7 +51,7 @@ export async function getMyProducts(): Promise<ProductType[]> {
     const data = await response.json();
     return data.data;
   } catch (error) {
-    console.error("Error fetching my products:", error);
+    logger.error({ err: error }, "Error fetching my products");
     return [];
   }
 }
@@ -68,7 +69,7 @@ export async function getProduct(id: string): Promise<ProductType | null> {
     const data = await response.json();
     return data.data;
   } catch (error) {
-    console.error("Error fetching product:", error);
+    logger.error({ err: error }, "Error fetching product");
     return null;
   }
 }

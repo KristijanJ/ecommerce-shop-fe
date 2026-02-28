@@ -3,6 +3,7 @@
 import { CartItemType } from "@/types/CartItemType";
 import redis from "../lib/redis";
 import { getSession } from "../lib/session";
+import logger from "../lib/logger";
 
 export const updateCart = async (newCart: CartItemType[]) => {
   const user = await getSession();
@@ -12,6 +13,7 @@ export const updateCart = async (newCart: CartItemType[]) => {
   }
 
   await redis.set(`cart:${user.id}`, JSON.stringify(newCart));
+  logger.info({ userId: user.id, itemCount: newCart.length }, "Cart updated");
 };
 
 export const getCart = async (): Promise<CartItemType[]> => {
@@ -22,5 +24,7 @@ export const getCart = async (): Promise<CartItemType[]> => {
   }
 
   const cartData = await redis.get(`cart:${user.id}`);
-  return cartData ? JSON.parse(cartData) : [];
+  const cart: CartItemType[] = cartData ? JSON.parse(cartData) : [];
+  logger.info({ userId: user.id, itemCount: cart.length }, "Cart fetched");
+  return cart;
 };

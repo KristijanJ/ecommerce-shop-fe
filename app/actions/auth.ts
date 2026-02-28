@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import logger from "../lib/logger";
 
 const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
@@ -38,14 +39,18 @@ export async function loginAction(
 
     if (!response.ok) {
       if (response.status === 401 || response.status === 404) {
+        logger.info({ email, status: response.status }, "Login failed: invalid credentials");
         return { error: "Invalid email or password", fields: { email } };
       }
+      logger.warn({ email, status: response.status }, "Login failed");
       return { error: data.error ?? "Login failed. Please try again.", fields: { email } };
     }
 
+    logger.info({ email }, "User logged in");
     const cookieStore = await cookies();
     cookieStore.set("auth_token", data.token, cookieOptions);
-  } catch {
+  } catch (err) {
+    logger.error({ err, email }, "Login network error");
     return { error: "Network error. Please check your connection.", fields: { email } };
   }
 
@@ -98,12 +103,15 @@ export async function registerAction(
     const data = await response.json();
 
     if (!response.ok) {
+      logger.warn({ email, status: response.status }, "Registration failed");
       return { error: data.error ?? "Registration failed. Please try again.", fields };
     }
 
+    logger.info({ email, role }, "User registered");
     const cookieStore = await cookies();
     cookieStore.set("auth_token", data.token, cookieOptions);
-  } catch {
+  } catch (err) {
+    logger.error({ err, email }, "Register network error");
     return { error: "Network error. Please check your connection.", fields };
   }
 

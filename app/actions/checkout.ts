@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { updateCart } from "./cart";
+import logger from "../lib/logger";
 
 const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
@@ -39,10 +40,12 @@ export async function checkoutFormAction(
 
   if (!response.ok) {
     const errorData = await response.json();
+    logger.warn({ status: response.status }, "Checkout failed");
     return { error: errorData.error || "Checkout failed. Please try again." };
   }
 
   const { data: purchase } = await response.json();
+  logger.info({ purchaseId: purchase.id }, "Purchase created");
   await updateCart([]);
   redirect(`/checkout/payment/${purchase.id}`);
 }
@@ -70,8 +73,10 @@ export async function paymentAction(
 
   if (!response.ok) {
     const errorData = await response.json();
+    logger.warn({ purchaseId, status: response.status }, "Payment failed");
     return { error: errorData.error || "Payment failed. Please try again." };
   }
 
+  logger.info({ purchaseId }, "Payment completed");
   redirect(`/order-confirmation/${purchaseId}`);
 }
