@@ -20,8 +20,7 @@ export async function getPurchases() {
 
   if (!response.ok) return [];
 
-  const { data } = await response.json();
-  return data;
+  return response.json();
 }
 
 export async function getPurchase(purchaseId: number) {
@@ -37,6 +36,5 @@ export async function getPurchase(purchaseId: number) {
 
   if (!response.ok) return null;
 
-  const { data } = await response.json();
-  return data;
+  return response.json();
 }
