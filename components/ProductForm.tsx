@@ -101,16 +101,16 @@ function ProductForm({ categories, product }: ProductFormProps) {
 
       <div>
         <label
-          htmlFor="productCategoryId"
+          htmlFor="categoryId"
           className="block text-sm font-medium text-gray-700"
         >
           Category <span className="text-red-500">*</span>
         </label>
         <select
-          id="productCategoryId"
-          name="productCategoryId"
+          id="categoryId"
+          name="categoryId"
           required
-          defaultValue={val("productCategoryId", product?.category?.id)}
+          defaultValue={val("categoryId", product?.category?.id)}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary bg-white"
         >
           <option value="" disabled>
