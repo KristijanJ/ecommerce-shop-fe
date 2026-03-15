@@ -27,7 +27,7 @@ export async function getProducts(filters?: {
     }
 
     const data = await response.json();
-    return data.data;
+    return data;
   } catch (error) {
     logger.error({ err: error }, "Error fetching products");
     return [];
@@ -49,7 +49,7 @@ export async function getMyProducts(): Promise<ProductType[]> {
     if (!response.ok) return [];
 
     const data = await response.json();
-    return data.data;
+    return data;
   } catch (error) {
     logger.error({ err: error }, "Error fetching my products");
     return [];
@@ -67,7 +67,7 @@ export async function getProduct(id: string): Promise<ProductType | null> {
     }
 
     const data = await response.json();
-    return data.data;
+    return data;
   } catch (error) {
     logger.error({ err: error }, "Error fetching product");
     return null;

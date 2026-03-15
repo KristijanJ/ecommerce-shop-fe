@@ -12,7 +12,7 @@ export async function getCategories(): Promise<ProductCategoryType[]> {
     if (!res.ok) return [];
 
     const data = await res.json();
-    return data.data;
+    return data;
   } catch {
     return [];
   }

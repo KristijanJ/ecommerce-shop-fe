@@ -26,7 +26,7 @@ export async function productFormAction(
   const price = formData.get("price") as string;
   const description = formData.get("description") as string;
   const image = formData.get("image") as string;
-  const productCategoryId = formData.get("productCategoryId") as string;
+  const categoryId = formData.get("categoryId") as string;
   const ratingRate = formData.get("ratingRate") as string;
   const ratingCount = formData.get("ratingCount") as string;
   const stock = formData.get("stock") as string;
@@ -36,7 +36,7 @@ export async function productFormAction(
     price,
     description,
     image,
-    productCategoryId,
+    categoryId,
     ratingRate,
     ratingCount,
     stock,
@@ -47,7 +47,7 @@ export async function productFormAction(
     !price ||
     !description ||
     !image ||
-    !productCategoryId ||
+    !categoryId ||
     !stock
   ) {
     return { error: "Please fill in all required fields", fields };
@@ -81,7 +81,7 @@ export async function productFormAction(
     stock: stockNum,
     description,
     image,
-    productCategoryId: parseInt(productCategoryId),
+    categoryId: parseInt(categoryId),
     ...(ratingRate ? { ratingRate: parseFloat(ratingRate) } : {}),
     ...(ratingCount ? { ratingCount: parseInt(ratingCount) } : {}),
   };
