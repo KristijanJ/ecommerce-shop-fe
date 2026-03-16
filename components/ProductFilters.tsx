@@ -29,6 +29,8 @@ export default function ProductFilters({ categories }: ProductFiltersProps) {
         }
       });
 
+      params.set('page', '1');
+
       startTransition(() => {
         router.push(`/products/?${params.toString()}`, { scroll: true });
       });

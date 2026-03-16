@@ -14,8 +14,8 @@ interface HomeProps {
 export default async function Home({ searchParams }: HomeProps) {
   const { category, search } = await searchParams;
 
-  const [products, categories] = await Promise.all([
-    getProducts({ categoryId: category, search }),
+  const [productData, categories] = await Promise.all([
+    getProducts({ categoryId: category, search, limit: 10, page: 1 }),
     getCategories(),
   ]);
 
@@ -23,7 +23,12 @@ export default async function Home({ searchParams }: HomeProps) {
     <div>
       <Hero shopName={shopName} shopDescription={shopDescription} />
       <ProductFilters categories={categories} />
-      <ProductList products={products} />
+      <ProductList
+        products={productData.products}
+        total={productData.total}
+        page={1}
+        perPage={10}
+      />
     </div>
   );
 }
