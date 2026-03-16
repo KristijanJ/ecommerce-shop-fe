@@ -8,13 +8,17 @@ const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
 
 export async function getProducts(filters?: {
+  page?: number,
+  limit?: number,
   categoryId?: string;
   search?: string;
-}): Promise<ProductType[]> {
+}): Promise<{ products: ProductType[]; total: number }> {
   try {
     const params = new URLSearchParams();
     if (filters?.categoryId) params.set("category", filters.categoryId);
     if (filters?.search) params.set("search", filters.search);
+    if (filters?.page) params.set("page", filters.page.toString());
+    if (filters?.limit) params.set("limit", filters.limit.toString());
 
     const query = params.toString();
     const response = await fetch(
@@ -30,7 +34,7 @@ export async function getProducts(filters?: {
     return data;
   } catch (error) {
     logger.error({ err: error }, "Error fetching products");
-    return [];
+    return { products: [], total: 0 };
   }
 }
 
