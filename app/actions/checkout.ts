@@ -44,7 +44,7 @@ export async function checkoutFormAction(
     return { error: errorData.error || "Checkout failed. Please try again." };
   }
 
-  const { data: purchase } = await response.json();
+  const purchase = await response.json();
   logger.info({ purchaseId: purchase.id }, "Purchase created");
   await updateCart([]);
   redirect(`/checkout/payment/${purchase.id}`);
