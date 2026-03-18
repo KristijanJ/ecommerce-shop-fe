@@ -5,6 +5,12 @@ export interface ProductOwnerType {
   lastName: string;
 }
 
+export interface OrderItem {
+  id: number;
+  priceAtPurchase: number;
+  quantity: number;
+}
+
 export interface ProductType {
   id: number;
   title: string;
@@ -16,6 +22,7 @@ export interface ProductType {
   ratingCount: number;
   stock: number;
   owner: ProductOwnerType;
+  orderItems?: OrderItem[];
 }
 
 export interface ProductCategoryType {

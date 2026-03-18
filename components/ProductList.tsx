@@ -13,6 +13,7 @@ const ProductList = ({
   perPage,
   title = "Explore Our Products",
   edit = false,
+  baseRoute = "products",
 }: {
   products: ProductType[];
   total: number;
@@ -20,6 +21,7 @@ const ProductList = ({
   perPage: number;
   title?: string;
   edit?: boolean;
+  baseRoute?: string;
 }) => {
   const [pages, setPages] = useState(0);
   const searchParams = useSearchParams();
@@ -32,7 +34,7 @@ const ProductList = ({
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", String(pageNum));
     params.set("limit", String(perPage));
-    return `/products?${params.toString()}`;
+    return `/${baseRoute}?${params.toString()}`;
   }
 
   return (
@@ -60,9 +62,10 @@ const ProductList = ({
                   href={buildHref(pageItem)}
                   key={pageItem}
                   className={`w-10 h-10 flex items-center justify-center text-sm font-medium border rounded-md transition-colors
-                    ${page === pageItem
-                      ? "bg-primary text-white border-primary"
-                      : "border-gray-300 hover:bg-gray-50"
+                    ${
+                      page === pageItem
+                        ? "bg-primary text-white border-primary"
+                        : "border-gray-300 hover:bg-gray-50"
                     }`}
                 >
                   {pageItem}
