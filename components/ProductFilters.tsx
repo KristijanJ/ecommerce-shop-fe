@@ -7,9 +7,10 @@ import { IoSearchOutline } from "react-icons/io5";
 
 interface ProductFiltersProps {
   categories: ProductCategoryType[];
+  baseRoute?: string;
 }
 
-export default function ProductFilters({ categories }: ProductFiltersProps) {
+export default function ProductFilters({ categories, baseRoute = "products" }: ProductFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -32,7 +33,7 @@ export default function ProductFilters({ categories }: ProductFiltersProps) {
       params.set('page', '1');
 
       startTransition(() => {
-        router.push(`/products/?${params.toString()}`, { scroll: true });
+        router.push(`/${baseRoute}?${params.toString()}`, { scroll: true });
       });
     },
     [router, searchParams],

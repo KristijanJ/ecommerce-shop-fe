@@ -28,7 +28,7 @@ const Product = ({
     setIsProductDeleteModalOpen(false);
   };
 
-  const { id, image, category, title, price, stock } = product;
+  const { id, image, category, title, price, stock, orderItems } = product;
   return (
     <div className="border border-[#e4e4e4] flex flex-col">
       <div className="h-48 flex justify-center items-center p-4">
@@ -47,6 +47,22 @@ const Product = ({
           <div className="text-red-500 text-sm mb-3">Out of stock</div>
         ) : (
           <div className="text-sm mb-3">In Stock: {stock}</div>
+        )}
+        {orderItems && (
+          <div className="border-t border-[#e4e4e4] mt-1 mb-3 pt-3 grid grid-cols-2 gap-2 text-center">
+            <div>
+              <div className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">Sold</div>
+              <div className="text-sm font-semibold">
+                {orderItems.reduce((sum, item) => sum + item.quantity, 0)} units
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 uppercase tracking-wide mb-0.5">Revenue</div>
+              <div className="text-sm font-semibold">
+                ${orderItems.reduce((sum, item) => sum + (item.priceAtPurchase * item.quantity) / 100, 0).toFixed(2)}
+              </div>
+            </div>
+          </div>
         )}
 
         <div className="flex items-center gap-2 mt-auto">
