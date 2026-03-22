@@ -58,9 +58,12 @@ const Header = ({ user }: HeaderProps) => {
                   <div className="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg border border-gray-100">
                     <div className="text-sm font-medium border-b border-gray-200 p-2 flex items-center gap-2">
                       <BsPerson className="text-lg" />
-                      <span>
+                      <Link
+                        href="/account"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
                         {user.firstName} {user.lastName}
-                      </span>
+                      </Link>
                     </div>
                     <div className="text-sm font-medium p-2 flex items-center gap-2">
                       <BsReceipt className="text-lg" />
