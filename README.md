@@ -2,12 +2,12 @@
 
 Next.js frontend for the ecommerce shop. Part of a multi-repo project:
 
-| Repo                                                                         | Purpose                                        |
-| ---------------------------------------------------------------------------- | ---------------------------------------------- |
-| [ecommerce-shop-fe](https://github.com/KristijanJ/ecommerce-shop-fe)         | **This repo** - Next.js frontend               |
-| [ecommerce-shop-be](https://github.com/KristijanJ/ecommerce-shop-be)         | Express.js REST API                            |
-| [ecommerce-shop-gitops](https://github.com/KristijanJ/ecommerce-shop-gitops) | Kubernetes manifests, ArgoCD, platform tooling |
-| [ecommerce-infra](https://github.com/KristijanJ/ecommerce-infra)             | Local Docker Compose for PostgreSQL and Redis  |
+| Repo                                                                         | Purpose                                             |
+| ---------------------------------------------------------------------------- | --------------------------------------------------- |
+| [ecommerce-shop-fe](https://github.com/KristijanJ/ecommerce-shop-fe)         | **This repo** - Next.js frontend                    |
+| [ecommerce-shop-be](https://github.com/KristijanJ/ecommerce-shop-be)         | Express.js REST API                                 |
+| [ecommerce-shop-gitops](https://github.com/KristijanJ/ecommerce-shop-gitops) | Kubernetes manifests, ArgoCD, platform tooling      |
+| [ecommerce-infra](https://github.com/KristijanJ/ecommerce-infra)             | Local Docker Compose for PostgreSQL, Redis and LGTM |
 
 ---
 
@@ -22,6 +22,7 @@ Next.js frontend for the ecommerce shop. Part of a multi-repo project:
 | **jose**           | JWT verification   | Server-side session decoding (no round-trip to backend)           |
 | **ioredis**        | Redis client       | Cart persistence                                                  |
 | **pino**           | Structured logging | JSON logs to stdout — compatible with Loki log aggregation in k8s |
+| **OpenTelemetry**  | Traces, metrics    | Auto-instrumented server side, exported over OTLP to local LGTM   |
 
 ---
 
@@ -65,7 +66,7 @@ On login, the backend issues a JWT. Next.js stores it in an `httpOnly` cookie an
 
 ### Prerequisites
 
-Start PostgreSQL and Redis via the infra repo:
+Start PostgreSQL, Redis and the LGTM observability stack via the infra repo:
 
 ```bash
 # in ecommerce-infra
@@ -110,6 +111,20 @@ Log level is controlled by `LOG_LEVEL` (default: `info`). In Kubernetes, logs ar
 
 ---
 
+## Observability
+
+Next.js runs `instrumentation.ts` when the server starts. It loads `instrumentation.node.ts`, which starts the OpenTelemetry SDK with Node auto-instrumentation for server-side fetch and Redis. Next.js adds its own spans for page renders.
+
+The SDK takes its settings from environment variables. Locally, the LGTM stack from `ecommerce-infra` receives traces and metrics on `localhost:4318`. To see them, open Grafana at <http://localhost:3300> (`admin` / `admin`) and look for the `ecommerce-fe` service in Tempo. The frontend passes the trace context to the backend, so one trace covers the frontend, the API and Postgres.
+
+Only the server is instrumented. The browser sends nothing.
+
+Next.js produces no `http_server_*` metrics. For the frontend's request rate and latency, use the `traces_spanmetrics_*` metrics that Tempo generates from the spans, filtered with `service="ecommerce-fe"`.
+
+The Proxmox and KinD clusters have no OTLP endpoint yet, so the gitops deployment sets `OTEL_SDK_DISABLED=true`.
+
+---
+
 ## Docker
 
 ```bash
@@ -123,12 +138,15 @@ The image is published to Docker Hub at `kristijan92/ecommerce-shop-fe` and load
 
 ## Environment Variables
 
-| Variable         | Description                                           |
-| ---------------- | ----------------------------------------------------- |
-| `API_URL`        | Backend base URL (e.g. `http://ecommerce-be-service`) |
-| `API_PORT`       | Backend port (e.g. `80`)                              |
-| `JWT_SECRET`     | Secret key for verifying JWTs server-side             |
-| `REDIS_HOST`     | Redis hostname                                        |
-| `REDIS_PORT`     | Redis port (default: `6379`)                          |
-| `REDIS_PASSWORD` | Redis password (optional)                             |
-| `LOG_LEVEL`      | Pino log level (default: `info`)                      |
+| Variable                      | Description                                           |
+| ----------------------------- | ----------------------------------------------------- |
+| `API_URL`                     | Backend base URL (e.g. `http://ecommerce-be-service`) |
+| `API_PORT`                    | Backend port (e.g. `80`)                              |
+| `JWT_SECRET`                  | Secret key for verifying JWTs server-side             |
+| `REDIS_HOST`                  | Redis hostname                                        |
+| `REDIS_PORT`                  | Redis port (default: `6379`)                          |
+| `REDIS_PASSWORD`              | Redis password (optional)                             |
+| `LOG_LEVEL`                   | Pino log level (default: `info`)                      |
+| `OTEL_SERVICE_NAME`           | Service name shown in Grafana (`ecommerce-fe`)        |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP endpoint (local: `http://localhost:4318`)        |
+| `OTEL_SDK_DISABLED`           | `true` turns telemetry off (used in the clusters)     |
