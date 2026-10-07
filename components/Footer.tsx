@@ -4,6 +4,7 @@ const Footer = () => {
       <div className="container mx-auto">
         <p className="text-white text-center">
           Copyright &copy; Kristijan Jovanovski 2026. All rights reserved.
+          Deployed by GitHub Actions and ArgoCD.
         </p>
       </div>
     </footer>

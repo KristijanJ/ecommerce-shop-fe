@@ -1,16 +1,17 @@
 import { getSession } from "@/app/lib/session";
 import { getPurchases } from "@/app/lib/purchases";
 import Link from "next/link";
+import { PurchaseStatus } from "@/types/ProductType";
 
 async function AccountPage() {
   const [user, purchases] = await Promise.all([getSession(), getPurchases()]);
 
   const totalOrders = purchases.length;
   const pendingOrders = purchases.filter(
-    (p: any) => p.status === "PENDING",
+    (p) => p.status === PurchaseStatus.PENDING,
   ).length;
   const completedOrders = purchases.filter(
-    (p: any) => p.status !== "PENDING",
+    (p) => p.status !== PurchaseStatus.PENDING,
   ).length;
 
   return (

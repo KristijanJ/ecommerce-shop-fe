@@ -3,7 +3,6 @@
 import Product from "@/components/Product";
 import type { ProductType } from "@/types/ProductType";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 const ProductList = ({
@@ -23,12 +22,8 @@ const ProductList = ({
   edit?: boolean;
   baseRoute?: string;
 }) => {
-  const [pages, setPages] = useState(0);
+  const pages = Math.ceil(total / perPage);
   const searchParams = useSearchParams();
-
-  useEffect(() => {
-    setPages(Math.ceil(total / perPage));
-  }, [total]);
 
   function buildHref(pageNum: number) {
     const params = new URLSearchParams(searchParams.toString());

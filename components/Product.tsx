@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useState } from "react";
-import { BsPlus, BsPencil, BsTrash3 } from "react-icons/bs";
+import { BsTrash3 } from "react-icons/bs";
 import { CartContext } from "@/contexts/CartContext";
 import type { ProductType } from "@/types/ProductType";
 import Link from "next/link";
