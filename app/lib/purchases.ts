@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
+import { PurchaseType } from "@/types/ProductType";
 
 const API_URL = process.env.API_URL || "http://localhost";
 const API_PORT = process.env.API_PORT || "3000";
@@ -10,7 +11,7 @@ async function getToken() {
   return cookieStore.get("auth_token")?.value;
 }
 
-export async function getPurchases() {
+export async function getPurchases(): Promise<PurchaseType[]> {
   const token = await getToken();
 
   const response = await fetch(`${API_URL}:${API_PORT}/purchases`, {

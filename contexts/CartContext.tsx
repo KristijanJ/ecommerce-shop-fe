@@ -36,15 +36,19 @@ const CartProvider = ({
   userId: number | null;
 }) => {
   const router = useRouter();
-  const [cart, setCart] = useState<CartItemType[]>([]);
-  const [itemAmount, setItemAmount] = useState<number>(0);
-  const [total, setTotal] = useState<number>(0);
+  const [storedCart, setCart] = useState<CartItemType[]>([]);
+  // A guest never sees a cart, even if one was loaded for a user who logged out
+  const cart = userId ? storedCart : [];
+
+  const total = cart.reduce((accumulator, currentItem) => {
+    return accumulator + currentItem.price * currentItem.amount;
+  }, 0);
+  const itemAmount = cart.reduce((accumulator, currentItem) => {
+    return accumulator + currentItem.amount;
+  }, 0);
 
   useEffect(() => {
-    if (!userId) {
-      setCart([]);
-      return;
-    }
+    if (!userId) return;
 
     const fetchCart = async () => {
       try {
@@ -57,22 +61,6 @@ const CartProvider = ({
 
     fetchCart();
   }, [userId]);
-
-  useEffect(() => {
-    const total = cart.reduce((accumulator, currentItem) => {
-      return accumulator + currentItem.price * currentItem.amount;
-    }, 0);
-    setTotal(total);
-  }, [cart]);
-
-  useEffect(() => {
-    if (cart) {
-      const amount = cart.reduce((accumulator, currentItem) => {
-        return accumulator + currentItem.amount;
-      }, 0);
-      setItemAmount(amount);
-    }
-  }, [cart]);
 
   const addToCart = async (product: ProductType, id: number) => {
     if (!userId) {

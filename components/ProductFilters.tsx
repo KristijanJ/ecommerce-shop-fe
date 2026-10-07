@@ -36,7 +36,7 @@ export default function ProductFilters({ categories, baseRoute = "products" }: P
         router.push(`/${baseRoute}?${params.toString()}`, { scroll: true });
       });
     },
-    [router, searchParams],
+    [router, searchParams, baseRoute],
   );
 
   const handleSearchSubmit = useCallback(

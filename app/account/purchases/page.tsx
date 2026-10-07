@@ -1,4 +1,5 @@
 import { getPurchases } from "@/app/lib/purchases";
+import { PurchaseStatus } from "@/types/ProductType";
 import Link from "next/link";
 
 async function PurchasesPage() {
@@ -18,11 +19,11 @@ async function PurchasesPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {purchases.map((purchase: any) => {
-            const isPending = purchase.status === "PENDING";
+          {purchases.map((purchase) => {
+            const isPending = purchase.status === PurchaseStatus.PENDING;
             const total = (purchase.amount / 100).toFixed(2);
             const allItems = purchase.orders.flatMap(
-              (order: any) => order.orderItems,
+              (order) => order.orderItems,
             );
 
             return (
@@ -51,7 +52,7 @@ async function PurchasesPage() {
 
                 {/* Items */}
                 <div className="flex flex-col divide-y">
-                  {allItems.map((item: any) => (
+                  {allItems.map((item) => (
                     <div key={item.id} className="flex items-center gap-4 py-3">
                       <img
                         src={item.product.image}
