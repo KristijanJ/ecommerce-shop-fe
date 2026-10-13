@@ -139,11 +139,15 @@ CI publishes the image to Docker Hub as `kristijan92/ecommerce-shop-fe`, and Arg
 
 ## CI/CD
 
-A push to `main` runs `.github/workflows/release.yaml`:
+A push to `main` runs `.github/workflows/release.yaml`. A push that changes only `.md` files does not. The workflow has three jobs:
 
 1. `test` runs `npm ci` and `npm run lint`.
 2. `build` builds the image and pushes it to Docker Hub as `kristijan92/ecommerce-shop-fe:<first 7 characters of the commit SHA>`.
-3. `bump-gitops` sets `newTag` in `apps/frontend/envs/homelab/kustomization.yaml` in the gitops repo with `yq`, commits to `main` and pushes. ArgoCD on the homelab then deploys the new image.
+3. `bump-gitops` sets `newTag` in `apps/frontend/envs/homelab/kustomization.yaml` in the gitops repo with `yq`. It pushes the change to the branch `bump/frontend-homelab`, opens a pull request and turns on auto-merge.
+
+The gitops repo runs its `validate` check on that pull request. When the check passes, GitHub merges the PR and ArgoCD on the homelab deploys the new image. A newer build replaces the commit on the same branch, so at most one frontend bump PR is open at a time.
+
+The job opens the PR with a token from a GitHub App. A PR opened with the default `GITHUB_TOKEN` does not start the gitops repo's workflows, so the check would not run.
 
 The workflow needs these in the repo settings:
 
