@@ -1,16 +1,19 @@
 # Multi-stage build for Next.js production
-FROM node:22-alpine AS base
+FROM node:24.22.2-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# Enable pnpm through corepack (version comes from packageManager)
+RUN corepack enable
+
 # Copy package files
-COPY package.json package-lock.json* ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Install dependencies
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -27,7 +30,7 @@ COPY . .
 # For runtime env vars, use ENV in the runner stage
 
 # Build Next.js app (standalone output)
-RUN npm run build
+RUN corepack enable && pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

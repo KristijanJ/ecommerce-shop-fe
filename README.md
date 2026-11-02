@@ -77,15 +77,16 @@ Start the backend:
 
 ```bash
 # in ecommerce-shop-be
-npm run start:dev
+pnpm start:dev
 ```
 
 Then start the frontend:
 
 ```bash
 cp .env.example .env.local    # set API_URL, API_PORT, JWT_SECRET, REDIS_HOST, REDIS_PORT
-npm install
-npm run dev                   # http://localhost:3000
+corepack enable              # once, pnpm's version is pinned in package.json
+pnpm install
+pnpm dev                      # http://localhost:3000
 ```
 
 If the backend already uses port 3000, set `PORT` for one of the two apps.
@@ -93,12 +94,12 @@ If the backend already uses port 3000, set `PORT` for one of the two apps.
 ### Scripts
 
 ```bash
-npm run build    # production build
-npm start        # run the production build
-npm run lint     # eslint
+pnpm build    # production build
+pnpm start    # run the production build
+pnpm lint     # eslint
 ```
 
-There are no tests yet. `npm run lint` is the only check in CI.
+There are no tests yet. `pnpm lint` is the only check in CI.
 
 ---
 
@@ -141,7 +142,7 @@ CI publishes the image to Docker Hub as `kristijan92/ecommerce-shop-fe`, and Arg
 
 A push to `main` runs `.github/workflows/release.yaml`. A push that changes only `.md` files does not. The workflow has three jobs:
 
-1. `test` runs `npm ci` and `npm run lint`.
+1. `test` runs `pnpm install --frozen-lockfile` and `pnpm run lint`.
 2. `build` builds the image and pushes it to Docker Hub as `kristijan92/ecommerce-shop-fe:<first 7 characters of the commit SHA>`.
 3. `bump-gitops` sets `newTag` in `apps/frontend/envs/homelab/kustomization.yaml` in the gitops repo with `yq`. It pushes the change to the branch `bump/frontend-homelab`, opens a pull request and turns on auto-merge.
 
